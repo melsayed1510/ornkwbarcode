@@ -1,284 +1,168 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>ORN Kw - Barcode Maker</title>
 
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Barcode + ZIP -->
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
 <style>
-  :root{
-    --primary:#0077ff;
-    --bg:#f5f7fa;
-    --card:#ffffff;
-    --dark:#333;
+  body{background:#f5f7fa;padding:30px;}
+  footer img{
+    width:22px;
+    filter:invert(1) brightness(2);
+    transition:0.2s;
   }
-  body{
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    padding: 30px;
-    margin:0;
-    direction:rtl;
-    text-align:center;
-  }
-
-  .lang-bar{
-    width:100%;
-    text-align:left;
-    margin-bottom:15px;
-  }
-  .lang-bar button{
-    background:#222;
-    color:#fff;
-    border:none;
-    padding:7px 15px;
-    border-radius:6px;
-    cursor:pointer;
-  }
-
-  .container{
-    max-width:900px;
-    margin:auto;
-    background:var(--card);
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.1);
-  }
-
-  h1{margin:0;margin-bottom:10px;color:var(--primary);font-size:22px;}
-
-  .site-link{
-    display:inline-block;
-    background:#ffb300;
-    color:#000;
-    padding:6px 14px;
-    border-radius:6px;
-    font-size:14px;
-    font-weight:bold;
-    text-decoration:none;
-    margin-bottom:15px;
-  }
-  .site-link:hover{background:#ffa000;}
-
-  textarea{
-    width:100%;height:140px;padding:10px;border-radius:6px;border:1px solid #ccc;
-    font-size:15px;resize:vertical;margin-top:12px;
-  }
-
-  button{
-    background:var(--primary);color:#fff;border:none;padding:10px 16px;border-radius:6px;
-    margin:8px 5px;cursor:pointer;font-size:14px;
-  }
-  button.secondary{background:#555;}
-
-  #status{margin-top:10px;font-weight:bold;color:#333;min-height:20px;}
-
-  .card{
-    border:1px solid #ddd;
-    padding:12px;border-radius:8px;margin-top:15px;
-    display:flex;align-items:center;justify-content:space-between;
-    gap:10px;flex-wrap:wrap;text-align:center;
-  }
+  footer img:hover{transform:scale(1.15);}
   .card svg{max-width:100%;}
-
-  /* 🌙 FOOTER */
-/* ⭐ Footer تعديل نهائي */
-footer{
-  max-width:900px;
-  margin:20px auto 0;
-  padding:8px 10px;
-  background:#222;
-  color:#fff;
-  border-radius:8px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:15px;
-  font-size:13px;
-  direction:ltr !important;
-}
-
-footer .name{
-  opacity:0.85;
-}
-
-footer .socials{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-footer .socials a img{
-  width:20px;
-  height:20px;
-  transition:0.2s;
-}
-footer .socials a img:hover{
-  transform:scale(1.15);
-}
-
-@media(max-width:600px){
-  footer{
-    flex-wrap:wrap;
-    gap:6px;
-  }
-}
+  footer{background:#222;color:#fff;}
 </style>
 </head>
-<body>
 
-<div class="lang-bar">
-  <button id="langBtn" onclick="toggleLang()">English</button>
+<body class="text-center">
+
+<!-- Language Bar -->
+<div class="container mb-3">
+  <div class="d-flex justify-content-start">
+    <button id="langBtn" class="btn btn-dark btn-sm" onclick="toggleLang()">English</button>
+  </div>
 </div>
 
-<div class="container">
-  <h1 id="mainTitle">مولد باركود المنتجات لشركة ORN Kw</h1>
+<!-- Main Content -->
+<div class="container bg-white shadow rounded p-4">
 
-  <a href="https://ornkw.com" target="_blank" class="site-link">
-    🌐 www.ornkw.com
-  </a>
+  <h2 id="mainTitle" class="text-primary mb-2">مولد باركود المنتجات لشركة ORN Kw</h2>
 
-  <h2 id="subtitle">أدخل أرقام (رقم في كل سطر)</h2>
+  <a href="https://ornkw.com" target="_blank" class="btn btn-warning fw-bold mb-3">🌐 www.ornkw.com</a>
 
-  <textarea id="input"></textarea>
+  <h5 id="subtitle">أدخل أرقام (رقم في كل سطر)</h5>
 
-  <br>
-  <button id="btnGen" onclick="generate()">توليد</button>
-  <button id="btnZip" class="secondary" onclick="downloadAll()">تحميل الكل</button>
+  <textarea id="input" class="form-control my-2" rows="5"></textarea>
 
-  <div id="status"></div>
-  <div id="output"></div>
+  <div class="d-flex justify-content-center gap-2 my-3 flex-wrap">
+    <button id="btnGen" class="btn btn-primary" onclick="generate()">توليد</button>
+    <button id="btnZip" class="btn btn-secondary" onclick="downloadAll()">تحميل الكل</button>
+  </div>
+
+  <div id="status" class="fw-bold text-dark mb-2"></div>
+
+  <!-- Output -->
+  <div id="output" class="row g-3"></div>
 </div>
 
-<!-- ⭐ FOOTER -->
-<footer>
-  <div class="name">Designed & Developed by Mohamed Elsayed</div>
-  <div class="socials">
+<!-- Footer -->
+<footer class="container rounded mt-4 p-2 d-flex justify-content-between align-items-center flex-wrap">
+  <div class="fw-bold opacity-75 small">© Mohamed Elsayed</div>
+  <div class="d-flex gap-2 align-items-center">
     <a href="https://www.facebook.com/mohamed.elsayed.mtwaly/" target="_blank">
-      <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="facebook">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="">
     </a>
     <a href="https://www.instagram.com/m.elsayed1510/" target="_blank">
-      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="instagram">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="">
     </a>
   </div>
 </footer>
 
 <script>
-let lastSVGs = [];
-let expectedCount = 0;
-let lang="ar";
-let lastStatusKey = "";
-let lastStatusArgs = [];
+let lastSVGs=[], expectedCount=0, lang="ar";
+let lastStatusKey="", lastStatusArgs=[];
 
-const txt={ar:{
-    title:"مولد باركود المنتجات لشركة ORN Kw",
-    sub:"أدخل أرقام (رقم في كل سطر)",
-    generate:"توليد",
-    zip:"تحميل الكل",
-    download:"تحميل",
-    generated:"تم توليد",
-    from:"من",
-    none:"لم يتم توليد أي باركود",
-    fail:"تعذر تحميل الكل.. يوجد أخطاء",
-    allgood:"جاري تجهيز التحميل...",
-  },
-  en:{
-    title:"ORN Kw Products Barcode Generator",
-    sub:"Enter codes (one per line)",
-    generate:"Generate",
-    zip:"Download All",
-    download:"Download",
-    generated:"Generated",
-    from:"of",
-    none:"No barcodes generated",
-    fail:"Can't download — some failed",
-    allgood:"Preparing download...",
-  }
+const txt={
+ ar:{title:"مولد باركود المنتجات لشركة ORN Kw",sub:"أدخل أرقام (رقم في كل سطر)",
+     generate:"توليد",zip:"تحميل الكل",download:"تحميل",
+     generated:"تم توليد",from:"من",
+     none:"لم يتم توليد أي باركود",fail:"تعذر تحميل الكل.. يوجد أخطاء",
+     allgood:"جاري تجهيز التحميل..."},
+ en:{title:"ORN Kw Products Barcode Generator",sub:"Enter codes (one per line)",
+     generate:"Generate",zip:"Download All",download:"Download",
+     generated:"Generated",from:"of",
+     none:"No barcodes generated",fail:"Can't download — some failed",
+     allgood:"Preparing download..."}
 };
 
-function setStatus(key, ...args){
-  lastStatusKey = key;
-  lastStatusArgs = args;
-  const status=document.getElementById("status");
+function setStatus(key,...args){
+  lastStatusKey=key; lastStatusArgs=args;
+  const st=document.getElementById("status");
   switch(key){
-    case "generated":status.innerText=`${txt[lang].generated} ${args[0]} ${txt[lang].from} ${args[1]}`;break;
-    case "none":status.innerText=txt[lang].none;break;
-    case "fail":status.innerText=txt[lang].fail;break;
-    case "allgood":status.innerText=txt[lang].allgood;break;
-    case "done":status.innerText=lang==="ar"?"✔️ تم التحميل بنجاح":"✔️ Download started";break;
-    default:status.innerText="";
+    case"generated":st.innerText=`${txt[lang].generated} ${args[0]} ${txt[lang].from} ${args[1]}`;break;
+    case"none":st.innerText=txt[lang].none;break;
+    case"fail":st.innerText=txt[lang].fail;break;
+    case"allgood":st.innerText=txt[lang].allgood;break;
+    case"done":st.innerText=lang==="ar"?"✔️ تم التحميل بنجاح":"✔️ Download started";break;
+    default:st.innerText="";
   }
 }
 
 function setUI(){
-  document.body.style.direction=lang==="ar"?"rtl":"ltr";
-  document.getElementById("mainTitle").innerText=txt[lang].title;
-  document.getElementById("subtitle").innerText=txt[lang].sub;
-  document.getElementById("btnGen").innerText=txt[lang].generate;
-  document.getElementById("btnZip").innerText=txt[lang].zip;
-  document.getElementById("langBtn").innerText=lang==="ar"?"English":"العربية";
-  if(lastStatusKey) setStatus(lastStatusKey, ...lastStatusArgs);
+ document.body.style.direction=lang==="ar"?"rtl":"ltr";
+ document.getElementById("mainTitle").innerText=txt[lang].title;
+ document.getElementById("subtitle").innerText=txt[lang].sub;
+ document.getElementById("btnGen").innerText=txt[lang].generate;
+ document.getElementById("btnZip").innerText=txt[lang].zip;
+ document.getElementById("langBtn").innerText=lang==="ar"?"English":"العربية";
+ if(lastStatusKey)setStatus(lastStatusKey,...lastStatusArgs);
 }
 
-function toggleLang(){lang = lang==="ar" ? "en" : "ar";setUI();}
+function toggleLang(){lang=lang==="ar"?"en":"ar";setUI();}
 
 function generate(){
-  const container=document.getElementById("output");
-  container.innerHTML="";
-  lastSVGs=[];
-  let lines=document.getElementById("input").value
-    .split("\n").map(l=>l.trim()).filter(l=>l!="");
-  lines=[...new Set(lines)];
-  expectedCount=lines.length;
-  let counter=1;
-  lines.forEach(text=>{
-    const div=document.createElement("div");
-    div.className="card";
-    const number=document.createElement("span");
-    number.style.fontWeight="bold";
-    number.innerText=counter+". ";
-    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-    try{
-      JsBarcode(svg,text,{format:"CODE128",width:2,height:60,displayValue:true});
-      const btn=document.createElement("button");
-      btn.innerText=`${txt[lang].download} ${text}`;
-      btn.onclick=()=>downloadOne(svg,text);
-      lastSVGs.push({svg,text});
-      div.appendChild(number);
-      div.appendChild(svg);
-      div.appendChild(btn);
-      container.appendChild(div);
-      counter++;
-    }catch(e){}
-  });
-  setStatus(lastSVGs.length>0?"generated":"none",lastSVGs.length,expectedCount);
+ const output=document.getElementById("output");
+ output.innerHTML=""; lastSVGs=[];
+ let lines=document.getElementById("input").value.split("\n").map(x=>x.trim()).filter(x=>x);
+ lines=[...new Set(lines)]; expectedCount=lines.length;
+ let counter=1;
+ lines.forEach(text=>{
+  const col=document.createElement("div");
+  col.className="col-12 col-md-6 col-lg-4";
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  try{
+    JsBarcode(svg,text,{format:"CODE128",width:2,height:60,displayValue:true});
+    const btn=`<button class="btn btn-sm btn-primary mt-2">${txt[lang].download} ${text}</button>`;
+    let card=document.createElement("div");
+    card.className="border rounded p-2";
+    card.append(`${counter}. `);
+    card.appendChild(svg);
+    let b=document.createElement("button");
+    b.className="btn btn-sm btn-primary mt-2";
+    b.innerText=`${txt[lang].download} ${text}`;
+    b.onclick=()=>downloadOne(svg,text);
+    card.append(b);
+    col.append(card);
+    output.append(col);
+    lastSVGs.push({svg,text});
+    counter++;
+  }catch(e){}
+ });
+ setStatus(lastSVGs.length>0?"generated":"none",lastSVGs.length,expectedCount);
 }
 
 function downloadOne(svg,text){
-  const xml=new XMLSerializer().serializeToString(svg);
-  const a=document.createElement("a");
-  a.download=text+".svg";
-  a.href="data:image/svg+xml;base64,"+btoa(xml);
-  a.click();
+ const xml=new XMLSerializer().serializeToString(svg);
+ const a=document.createElement("a");
+ a.download=text+".svg";
+ a.href="data:image/svg+xml;base64,"+btoa(xml);
+ a.click();
 }
 
 async function downloadAll(){
-  if(lastSVGs.length===0){setStatus("none");return;}
-  if(lastSVGs.length!==expectedCount){setStatus("fail");return;}
-  setStatus("allgood");
-  const zip=new JSZip();
-  lastSVGs.forEach(({svg,text})=>{
-    zip.file(`${text}.svg`,new XMLSerializer().serializeToString(svg));
-  });
-  saveAs(await zip.generateAsync({type:"blob"}),"ORNBARCODES.zip");
-  setStatus("done");
-  setTimeout(()=>{setStatus("");},4000);
+ if(lastSVGs.length===0){setStatus("none");return;}
+ if(lastSVGs.length!==expectedCount){setStatus("fail");return;}
+ setStatus("allgood");
+ const zip=new JSZip();
+ lastSVGs.forEach(({svg,text})=>zip.file(`${text}.svg`,new XMLSerializer().serializeToString(svg)));
+ saveAs(await zip.generateAsync({type:"blob"}),"ORNBARCODES.zip");
+ setStatus("done");
+ setTimeout(()=>{setStatus("")},4000);
 }
 
 setUI();
 </script>
-
 </body>
 </html>
